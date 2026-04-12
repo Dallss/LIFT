@@ -1,27 +1,185 @@
 import SwiftUI
 
-/// Calendar surface; refine with month grid or EventKit later.
 struct HomeCalendarPane: View {
     @Binding var selectedDate: Date
+    @State private var displayedMonth: Date = Calendar.current.startOfMonth(for: Date())
+
+    private let calendar = Calendar.current
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 0), count: 7)
+    private let weekdaySymbols = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
 
     var body: some View {
-        VStack(spacing: 12) {
-            Text(selectedDate.formatted(.dateTime.month(.wide).year()))
-                .font(.title2.weight(.semibold))
-
-            DatePicker(
-                "",
-                selection: $selectedDate,
-                displayedComponents: [.date]
-            )
-                .datePickerStyle(.graphical)
-                .labelsHidden()
-
-            Spacer(minLength: 0)
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                monthHeader
+                    .frame(height: 44)
+                weekdayHeader
+                    .frame(height: 32)
+                dayGrid(availableHeight: geo.size.height - 44 - 32)
+            }
         }
-        .padding(12)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(.quaternary.opacity(0.35))
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
+
+    // MARK: - Subviews
+
+    private var monthHeader: some View {
+        HStack {
+            Button { shiftMonth(by: -1) } label: {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 15, weight: .medium))
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 8)
+
+            Spacer()
+
+            Text(displayedMonth.formatted(.dateTime.month(.wide).year()))
+                .font(.system(size: 15, weight: .semibold))
+
+            Spacer()
+
+            Button { shiftMonth(by: 1) } label: {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 15, weight: .medium))
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 8)
+        }
+        .padding(.horizontal, 4)
+    }
+
+    private var weekdayHeader: some View {
+        HStack(spacing: 0) {
+            ForEach(weekdaySymbols, id: \.self) { symbol in
+                Text(symbol)
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity)
+            }
+        }
+    }
+
+    private func dayGrid(availableHeight: CGFloat) -> some View {
+        let cells = makeCells()
+        let rowCount = CGFloat(cells.count / 7)
+        let cellHeight = availableHeight / rowCount
+
+        return GeometryReader { geo in
+            let w = geo.size.width
+            let h = geo.size.height
+
+            ZStack(alignment: .topLeading) {
+                // Day number cells — no dividers inside
+                LazyVGrid(columns: columns, spacing: 0) {
+                    ForEach(cells) { cell in
+                        DayCell(
+                            cell: cell,
+                            isSelected: calendar.isDate(cell.date, inSameDayAs: selectedDate),
+                            isToday: calendar.isDateInToday(cell.date)
+                        )
+                        .frame(height: cellHeight)
+                        .onTapGesture { selectedDate = cell.date }
+                    }
+                }
+
+                // Horizontal lines
+                ForEach(0...6, id: \.self) { row in
+                    Rectangle()
+                        .fill(Color(nsColor: .separatorColor))
+                        .frame(width: w, height: 0.5)
+                        .offset(y: CGFloat(row) * cellHeight)
+                }
+
+                // Vertical lines
+                ForEach(1...6, id: \.self) { col in
+                    Rectangle()
+                        .fill(Color(nsColor: .separatorColor))
+                        .frame(width: 0.5, height: h)
+                        .offset(x: CGFloat(col) * (w / 7))
+                }
+            }
+        }
+        .frame(height: cellHeight * rowCount)
+    }
+
+    // MARK: - Helpers
+
+    private func makeCells() -> [CalendarCell] {
+        let monthStart = displayedMonth
+        let firstWeekday = calendar.component(.weekday, from: monthStart) - 1
+        let daysInMonth = calendar.range(of: .day, in: .month, for: monthStart)!.count
+        let totalCells = 42  // always 6 rows × 7
+
+        return (0..<totalCells).map { index in
+            let offset = index - firstWeekday
+            let date = calendar.date(byAdding: .day, value: offset, to: monthStart)!
+            let isCurrentMonth = calendar.isDate(date, equalTo: monthStart, toGranularity: .month)
+            return CalendarCell(id: index, date: date, isCurrentMonth: isCurrentMonth)
+        }
+    }
+
+    private func shiftMonth(by value: Int) {
+        if let newMonth = calendar.date(byAdding: .month, value: value, to: displayedMonth) {
+            displayedMonth = newMonth
+        }
+    }
+}
+
+// MARK: - Supporting types
+
+struct CalendarCell: Identifiable {
+    let id: Int
+    let date: Date
+    let isCurrentMonth: Bool
+}
+
+struct DayCell: View {
+    let cell: CalendarCell
+    let isSelected: Bool
+    let isToday: Bool
+
+    private let calendar = Calendar.current
+
+    var body: some View {
+        ZStack {
+            if isSelected {
+                Circle()
+                    .fill(Color.primary)
+                    .frame(width: 30, height: 30)
+            } else if isToday {
+                Circle()
+                    .fill(Color.accentColor)
+                    .frame(width: 30, height: 30)
+            }
+
+            Text("\(calendar.component(.day, from: cell.date))")
+                .font(.system(size: 13))
+                .foregroundStyle(labelColor)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        // No Divider overlays here
+    }
+
+    private var labelColor: Color {
+        if isSelected || isToday { return .white }
+        if !cell.isCurrentMonth { return Color(nsColor: .tertiaryLabelColor) }
+        return Color(nsColor: .labelColor)
+    }
+}
+
+// MARK: - Calendar extension
+
+extension Calendar {
+    func startOfMonth(for date: Date) -> Date {
+        let components = dateComponents([.year, .month], from: date)
+        return self.date(from: components)!
+    }
+}
+
+#Preview {
+    HomeCalendarPane(selectedDate: .constant(Date()))
+        .frame(width: 640, height: 480)
+        .modelContainer(for: TaskItem.self, inMemory: true)
 }

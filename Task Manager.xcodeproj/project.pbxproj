@@ -78,6 +78,7 @@
 				2199F97C2F8ADC730017FB4F /* Task Manager */,
 				2199F98E2F8ADC750017FB4F /* Task ManagerTests */,
 				2199F9982F8ADC750017FB4F /* Task ManagerUITests */,
+				2199FA132F8C148B0017FB4F /* Frameworks */,
 				2199F97B2F8ADC730017FB4F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +91,13 @@
 				2199F9952F8ADC750017FB4F /* Task ManagerUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2199FA132F8C148B0017FB4F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,6 +203,8 @@
 			);
 			mainGroup = 2199F9712F8ADC720017FB4F;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2199F97B2F8ADC730017FB4F /* Products */;
 			projectDirPath = "";
