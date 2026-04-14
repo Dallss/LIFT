@@ -1,6 +1,22 @@
 import SwiftUI
 
-struct HomeCalendarPane: View {
+/// Calendar column: owns selected-date state and embeds the grid UI.
+struct CalendarPane: HomePaneContent {
+
+    static let paneKind = HomePane.calendar
+    static let paneTitle = "Calendar"
+    static let paneSystemImage = "calendar"
+
+    @State private var selectedDate = Date.now
+
+    var body: some View {
+        CalendarGridView(selectedDate: $selectedDate)
+    }
+}
+
+// MARK: - Grid
+
+private struct CalendarGridView: View {
     @Binding var selectedDate: Date
     @State private var displayedMonth: Date = Calendar.current.startOfMonth(for: Date())
 
@@ -21,8 +37,6 @@ struct HomeCalendarPane: View {
         .background(.quaternary.opacity(0.35))
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
-
-    // MARK: - Subviews
 
     private var monthHeader: some View {
         HStack {
@@ -71,7 +85,6 @@ struct HomeCalendarPane: View {
             let h = geo.size.height
 
             ZStack(alignment: .topLeading) {
-                // Day number cells — no dividers inside
                 LazyVGrid(columns: columns, spacing: 0) {
                     ForEach(cells) { cell in
                         DayCell(
@@ -84,7 +97,6 @@ struct HomeCalendarPane: View {
                     }
                 }
 
-                // Horizontal lines
                 ForEach(0...6, id: \.self) { row in
                     Rectangle()
                         .fill(Color(nsColor: .separatorColor))
@@ -92,7 +104,6 @@ struct HomeCalendarPane: View {
                         .offset(y: CGFloat(row) * cellHeight)
                 }
 
-                // Vertical lines
                 ForEach(1...6, id: \.self) { col in
                     Rectangle()
                         .fill(Color(nsColor: .separatorColor))
@@ -104,13 +115,10 @@ struct HomeCalendarPane: View {
         .frame(height: cellHeight * rowCount)
     }
 
-    // MARK: - Helpers
-
     private func makeCells() -> [CalendarCell] {
         let monthStart = displayedMonth
         let firstWeekday = calendar.component(.weekday, from: monthStart) - 1
-        let daysInMonth = calendar.range(of: .day, in: .month, for: monthStart)!.count
-        let totalCells = 42  // always 6 rows × 7
+        let totalCells = 42
 
         return (0..<totalCells).map { index in
             let offset = index - firstWeekday
@@ -129,13 +137,13 @@ struct HomeCalendarPane: View {
 
 // MARK: - Supporting types
 
-struct CalendarCell: Identifiable {
+private struct CalendarCell: Identifiable {
     let id: Int
     let date: Date
     let isCurrentMonth: Bool
 }
 
-struct DayCell: View {
+private struct DayCell: View {
     let cell: CalendarCell
     let isSelected: Bool
     let isToday: Bool
@@ -159,7 +167,6 @@ struct DayCell: View {
                 .foregroundStyle(labelColor)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        // No Divider overlays here
     }
 
     private var labelColor: Color {
@@ -169,17 +176,14 @@ struct DayCell: View {
     }
 }
 
-// MARK: - Calendar extension
-
 extension Calendar {
-    func startOfMonth(for date: Date) -> Date {
+    fileprivate func startOfMonth(for date: Date) -> Date {
         let components = dateComponents([.year, .month], from: date)
         return self.date(from: components)!
     }
 }
 
-#Preview {
-    HomeCalendarPane(selectedDate: .constant(Date()))
+#Preview("Calendar grid") {
+    CalendarPane()
         .frame(width: 640, height: 480)
-        .modelContainer(for: TaskItem.self, inMemory: true)
 }

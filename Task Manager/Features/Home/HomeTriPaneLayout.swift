@@ -1,12 +1,5 @@
 import SwiftUI
 
-/// Which of the three home panes is visually primary (largest / dominant).
-enum HomePane: Int, CaseIterable, Hashable {
-    case taskList = 0
-    case calendar = 1
-    case miniStacks = 2
-}
-
 /// Places exactly three subviews in rects that depend on `focusFraction` and animates smoothly
 /// when `focusFraction` changes with `withAnimation` (via `Animatable`).
 struct HomeTriPaneLayout: Layout {

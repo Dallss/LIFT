@@ -1,7 +1,7 @@
 import SwiftData
 import SwiftUI
 
-/// Lists persisted tasks from SwiftData. Intended for use inside `HomeView` under a `NavigationStack`.
+/// Lists persisted tasks from SwiftData. Embedded by ``TaskListPane``.
 struct TaskListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \TaskItem.createdAt, order: .reverse) private var tasks: [TaskItem]

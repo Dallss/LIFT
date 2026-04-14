@@ -1,7 +1,11 @@
 import SwiftUI
 
-/// Container for smaller, unfocused-style task list previews (placeholder layout).
-struct MiniTaskListsPane: View {
+struct MiniListsPane: HomePaneContent {
+
+    static let paneKind = HomePane.miniStacks
+    static let paneTitle = "Lists"
+    static let paneSystemImage = "square.stack.3d.up"
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Quick lists")
