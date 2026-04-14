@@ -10,6 +10,9 @@ import SwiftUI
 
 @main
 struct Task_ManagerApp: App {
+    
+    @State private var settings = Settings()
+    
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([TaskItem.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
