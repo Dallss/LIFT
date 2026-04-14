@@ -15,14 +15,17 @@ struct HomeView: View {
                 Pane(isFocused: focusedPane == .taskList, onFocus: { focus(.taskList) }) {
                     TaskListPane()
                 }
+                .padding(8)
 
                 Pane(isFocused: focusedPane == .calendar, onFocus: { focus(.calendar) }) {
                     CalendarPane()
                 }
+                .padding(8)
 
                 Pane(isFocused: focusedPane == .miniStacks, onFocus: { focus(.miniStacks) }) {
                     MiniListsPane()
                 }
+                .padding(8)
             }
             .padding(10)
             .navigationTitle("Home")
