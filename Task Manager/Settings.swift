@@ -10,5 +10,5 @@ import Observation
 
 @Observable
 class Settings {
-    @AppStorage("isDarkMode") var isDarkMode = false
+
 }

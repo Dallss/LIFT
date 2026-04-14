@@ -25,6 +25,7 @@ struct Pane<Content: View>: View {
     let isFocused: Bool
     let onFocus: () -> Void
     @ViewBuilder var content: () -> Content
+    @State private var isHovering = false
 
     init(
         isFocused: Bool,
@@ -57,13 +58,24 @@ struct Pane<Content: View>: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-
-            focusHeader
-
+            
+            Group {
+                if isFocused {
+                    focusHeader
+                }
+                else{
+                    if isHovering {
+                        focusHeader
+                            .transition(.move(edge: .top))
+                    }
+                }
+            }
+            
             content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .layoutPriority(isFocused ? 1 : 0)
         }
+        .animation(.spring(response: 0.2, dampingFraction: 0.85), value: isHovering)
         .background(.background, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
         .overlay {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
@@ -81,6 +93,9 @@ struct Pane<Content: View>: View {
             y: isFocused ? 4 : 2
         )
         .id(id)
+        .onHover { hovering in
+            isHovering = hovering
+        }
     }
 
     private var focusHeader: some View {
@@ -111,3 +126,4 @@ struct Pane<Content: View>: View {
         }
     }
 }
+
