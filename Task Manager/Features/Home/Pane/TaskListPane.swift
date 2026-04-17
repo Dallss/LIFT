@@ -56,19 +56,33 @@ struct TaskListPane: HomePaneContent {
                 }
             }
 
-            // Bottom Add Button
-            Button {
-                newTaskTitle = ""
-                isPresentingNewTask = true
-            } label: {
-                HStack {
-                    Image(systemName: "plus")
-                    Text("Add Task")
+            HStack(spacing: 12) {
+
+                // Add Task (forced 44)
+                Button {
+                    newTaskTitle = ""
+                    isPresentingNewTask = true
+                } label: {
+                    HStack {
+                        Image(systemName: "plus")
+                        Text("Add Task")
+                    }
+                    .frame(height: 44)
+                    .frame(maxWidth: .infinity)
                 }
-                .frame(maxWidth: 280)
-                .padding()
+                .buttonStyle(.borderedProminent)
+                .controlSize(.regular)
+
+                // Trash (forced 44 square)
+                Button {
+                    deleteCompletedTasks()
+                } label: {
+                    Image(systemName: "trash")
+                        .frame(width: 44, height: 44)
+                }
+                .buttonStyle(.bordered)
+                .controlSize(.regular)
             }
-            .buttonStyle(.borderedProminent)
             .padding()
         }
         .sheet(isPresented: $isPresentingNewTask) {
@@ -123,6 +137,15 @@ struct TaskListPane: HomePaneContent {
         isPresentingNewTask = false
     }
 
+    private func deleteCompletedTasks() {
+        let completedTasks = tasks.filter { $0.isCompleted }
+        guard !completedTasks.isEmpty else { return }
+
+        for task in completedTasks {
+            modelContext.delete(task)
+        }
+    }
+    
     private func deleteTasks(at offsets: IndexSet) {
         for index in offsets {
             modelContext.delete(tasks[index])
