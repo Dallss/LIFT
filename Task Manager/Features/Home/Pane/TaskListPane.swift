@@ -17,6 +17,7 @@ struct TaskListPane: HomePaneContent {
     @State private var newTaskTitle = ""
     @State private var hasDueDate = false
     @State private var newTaskDue = Date()
+    @State private var selectedDate = Calendar.current.startOfDay(for: Date())
 
     var body: some View {
         VStack(spacing: 0) {
@@ -47,7 +48,7 @@ struct TaskListPane: HomePaneContent {
                     )
                 } else {
                     List {
-                        ForEach(tasks) { task in
+                        ForEach(tasksByDueDate(selectedDate)) { task in
                             TaskRowView(task: task)
                         }
                         .onDelete(perform: deleteTasks)
@@ -150,6 +151,21 @@ struct TaskListPane: HomePaneContent {
         for index in offsets {
             modelContext.delete(tasks[index])
         }
+    }
+    
+    private func tasksByDueDate(_ date: Date) -> [TaskItem] {
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
+
+        return tasks
+            .filter { task in
+                guard let due = task.deadline else { return false }
+                return due >= startOfDay && due < endOfDay
+            }
+            .sorted {
+                ($0.deadline ?? .distantFuture) < ($1.deadline ?? .distantFuture)
+            }
     }
 }
 
