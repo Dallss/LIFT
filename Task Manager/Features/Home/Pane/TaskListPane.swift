@@ -15,6 +15,8 @@ struct TaskListPane: HomePaneContent {
     
     @State private var isPresentingNewTask = false
     @State private var newTaskTitle = ""
+    @State private var hasDueDate = false
+    @State private var newTaskDue = Date()
 
     var body: some View {
         VStack(spacing: 0) {
@@ -79,9 +81,18 @@ struct TaskListPane: HomePaneContent {
             Form {
                 TextField("Title", text: $newTaskTitle)
                     .textFieldStyle(.roundedBorder)
+
+                Toggle("Due Date", isOn: $hasDueDate)
+
+                if hasDueDate {
+                    DatePicker(
+                        "Due",
+                        selection: $newTaskDue,
+                        displayedComponents: [.date, .hourAndMinute]
+                    )
+                }
             }
             .formStyle(.grouped)
-            .padding()
             .navigationTitle("New Task")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -93,13 +104,22 @@ struct TaskListPane: HomePaneContent {
                 }
             }
         }
-        .frame(minWidth: 320, minHeight: 160)
+        .frame(minWidth: 320, minHeight: 200)
     }
 
     private func addTask() {
-        let trimmed = newTaskTitle.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        modelContext.insert(TaskItem(title: trimmed))
+        let task = TaskItem(
+            title: newTaskTitle,
+            deadline: hasDueDate ? newTaskDue : nil
+        )
+
+        modelContext.insert(task)
+
+        // reset state
+        newTaskTitle = ""
+        hasDueDate = false
+        newTaskDue = Date()
+
         isPresentingNewTask = false
     }
 
