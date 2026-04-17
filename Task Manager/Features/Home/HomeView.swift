@@ -29,6 +29,7 @@ struct HomeView: View {
             }
             .padding(10)
             .navigationTitle("Home")
+            .environment(\.focusPane, focus)
 
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
@@ -53,5 +54,17 @@ struct HomeView: View {
         )) {
             focusedPane = pane
         }
+    }
+}
+
+// MARK: -Global Focus Action
+private struct FocusPaneKey: EnvironmentKey {
+    static let defaultValue: (HomePane) -> Void = { _ in }
+}
+
+extension EnvironmentValues {
+    var focusPane: (HomePane) -> Void {
+        get { self[FocusPaneKey.self] }
+        set { self[FocusPaneKey.self] = newValue }
     }
 }

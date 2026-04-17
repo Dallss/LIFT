@@ -59,17 +59,17 @@ struct Pane<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             
-            Group {
-                if isFocused {
-                    focusHeader
-                }
-                else{
-                    if isHovering {
-                        focusHeader
-                            .transition(.move(edge: .top))
-                    }
-                }
-            }
+//            Group {
+//                if isFocused {
+//                    focusHeader
+//                }
+//                else{
+//                    if isHovering {
+//                        focusHeader
+//                            .transition(.move(edge: .top))
+//                    }
+//                }
+//            }
             
             content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)

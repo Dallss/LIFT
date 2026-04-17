@@ -17,6 +17,8 @@ struct CalendarPane: HomePaneContent {
 // MARK: - Grid
 
 private struct CalendarGridView: View {
+    @Environment(\.focusPane) var focus
+    
     @Binding var selectedDate: Date
     @State private var displayedMonth: Date = Calendar.current.startOfMonth(for: Date())
 
@@ -28,7 +30,12 @@ private struct CalendarGridView: View {
         GeometryReader { geo in
             VStack(spacing: 0) {
                 monthHeader
+                    .frame(maxWidth: .infinity)
                     .frame(height: 44)
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        focus(.calendar)
+                    }
                 weekdayHeader
                     .frame(height: 32)
                 dayGrid(availableHeight: geo.size.height - 44 - 32)

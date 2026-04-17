@@ -8,8 +8,9 @@ struct TaskListPane: HomePaneContent {
     static let paneTitle = "Tasks"
     static let paneSystemImage = "checklist"
     
-    
+    @Environment(\.focusPane) var focus
     @Environment(\.modelContext) private var modelContext
+    
     @Query(sort: \TaskItem.createdAt, order: .reverse) private var tasks: [TaskItem]
     
     @State private var isPresentingNewTask = false
@@ -17,6 +18,24 @@ struct TaskListPane: HomePaneContent {
 
     var body: some View {
         VStack(spacing: 0) {
+            // Header
+            HStack {
+                Text("Tasks")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                Spacer()
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+            .contentShape(Rectangle())
+            .onTapGesture {
+                focus(.taskList)
+            }
+            
+            Divider()
+
             Group {
                 if tasks.isEmpty {
                     ContentUnavailableView(
