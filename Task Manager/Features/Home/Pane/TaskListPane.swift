@@ -49,7 +49,7 @@ struct TaskListPane: HomePaneContent {
                 } else {
                     List {
                         ForEach(tasksByDueDate(selectedDate)) { task in
-                            TaskRowView(task: task)
+                            TaskRowView(task: task, showDueTime: true)
                         }
                         .onDelete(perform: deleteTasks)
                     }
@@ -174,8 +174,22 @@ struct TaskListPane: HomePaneContent {
 private struct TaskRowView: View {
     @Bindable var task: TaskItem
 
+    let showDueDate: Bool
+    let showDueTime: Bool
+
+    init(
+        task: TaskItem,
+        showDueDate: Bool = false,
+        showDueTime: Bool = false
+    ) {
+        self.task = task
+        self.showDueDate = showDueDate
+        self.showDueTime = showDueTime
+    }
+
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 12) {
+
             Toggle("Completed", isOn: $task.isCompleted)
                 .toggleStyle(.checkbox)
                 .labelsHidden()
@@ -191,6 +205,26 @@ private struct TaskRowView: View {
             }
 
             Spacer(minLength: 0)
+
+            if let due = task.deadline {
+
+                let isOverdue = !task.isCompleted && due < Date()
+
+                VStack(alignment: .trailing, spacing: 2) {
+
+                    if showDueDate {
+                        Text(due.formatted(date: .abbreviated, time: .omitted))
+                            .font(.caption)
+                            .foregroundStyle(isOverdue ? .red : .secondary)
+                    }
+
+                    if showDueTime {
+                        Text(due.formatted(date: .omitted, time: .shortened))
+                            .font(.caption)
+                            .foregroundStyle(isOverdue ? .red : .secondary)
+                    }
+                }
+            }
         }
         .padding(.vertical, 2)
         .accessibilityElement(children: .combine)
