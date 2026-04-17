@@ -5,7 +5,7 @@ import SwiftUI
 struct TaskListPane: HomePaneContent {
     
     static let paneKind = HomePane.taskList
-    static let paneTitle = "Tasks"
+    static let paneTitle = "Today"
     static let paneSystemImage = "checklist"
     
     @Environment(\.focusPane) var focus

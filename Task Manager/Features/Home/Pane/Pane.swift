@@ -4,7 +4,7 @@ import SwiftUI
 enum HomePane: Int, CaseIterable, Hashable {
     case taskList = 0
     case calendar = 1
-    case miniStacks = 2
+    case allTasks = 2
 }
 
 /// Metadata and content contract for a column in ``HomeView``. Concrete types

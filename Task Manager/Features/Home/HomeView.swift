@@ -22,8 +22,8 @@ struct HomeView: View {
                 }
                 .padding(8)
 
-                Pane(isFocused: focusedPane == .miniStacks, onFocus: { focus(.miniStacks) }) {
-                    MiniListsPane()
+                Pane(isFocused: focusedPane == .allTasks, onFocus: { focus(.allTasks) }) {
+                    AllTasksPane()
                 }
                 .padding(8)
             }
@@ -37,7 +37,7 @@ struct HomeView: View {
                     Picker("Focus", selection: $focusedPane) {
                         Text("Tasks").tag(HomePane.taskList)
                         Text("Calendar").tag(HomePane.calendar)
-                        Text("Lists").tag(HomePane.miniStacks)
+                        Text("Lists").tag(HomePane.allTasks)
                     }
                     .pickerStyle(.segmented)
                     .frame(minWidth: 280)
