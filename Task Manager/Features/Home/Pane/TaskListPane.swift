@@ -5,7 +5,7 @@ import SwiftUI
 struct TaskListPane: HomePaneContent {
     
     static let paneKind = HomePane.taskList
-    static let paneTitle = "Today"
+    static let paneTitle = "Tasks"
     static let paneSystemImage = "checklist"
     
     @Environment(\.focusPane) var focus
@@ -225,6 +225,42 @@ private struct TaskRowView: View {
                     }
                 }
             }
+            // Three-dot menu button
+            Menu {
+                Button {
+                } label: {
+                    Label("Rename", systemImage: "pencil")
+                }
+
+                Button {
+                    // Present your deadline picker here
+                } label: {
+                    Label("Move Deadline", systemImage: "calendar")
+                }
+
+            //                if task.label != nil {
+            //                    Button(role: .destructive) {
+            //                        task.label = nil
+            //                    } label: {
+            //                        Label("Remove Label", systemImage: "tag.slash")
+            //                    }
+            //                } else {
+            //                    Button {
+            //                        // Present your label picker here
+            //                    } label: {
+            //                        Label("Add Label", systemImage: "tag")
+            //                    }
+            //                }
+            } label: {
+                Image(systemName: "ellipsis") // TODO: make this vertical
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(width: 28, height: 28)
+                    .contentShape(Rectangle())
+            }
+            .menuStyle(.borderlessButton)
+            .menuIndicator(.hidden)
+            .fixedSize()
         }
         .padding(.vertical, 2)
         .accessibilityElement(children: .combine)
