@@ -9,5 +9,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .frame(width: 640, height: 480)
-        .modelContainer(for: TaskItem.self, inMemory: true)
+        .modelContainer(for: [TaskItem.self, TaskTag.self], inMemory: true)
 }

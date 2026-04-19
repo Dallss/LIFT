@@ -12,11 +12,14 @@ struct TaskListPane: HomePaneContent {
     @Environment(\.modelContext) private var modelContext
     
     @Query(sort: \TaskItem.createdAt, order: .reverse) private var tasks: [TaskItem]
+    @Query(sort: \TaskTag.name) private var tags: [TaskTag]
     
     @State private var isPresentingNewTask = false
     @State private var newTaskTitle = ""
     @State private var hasDueDate = false
     @State private var newTaskDue = Date()
+    @State private var newTaskTagIDs: Set<PersistentIdentifier> = []
+    @State private var newTagName = ""
     @State private var selectedDate = Calendar.current.startOfDay(for: Date())
 
     var body: some View {
@@ -49,7 +52,7 @@ struct TaskListPane: HomePaneContent {
                 } else {
                     List {
                         ForEach(tasksByDueDate(selectedDate)) { task in
-                            TaskRowView(task: task, showDueTime: true)
+                            TaskRowView(task: task, allTags: tags, showDueTime: true)
                         }
                         .onDelete(perform: deleteTasks)
                     }
@@ -62,6 +65,8 @@ struct TaskListPane: HomePaneContent {
                 // Add Task (forced 44)
                 Button {
                     newTaskTitle = ""
+                    newTaskTagIDs = []
+                    newTagName = ""
                     isPresentingNewTask = true
                 } label: {
                     HStack {
@@ -89,6 +94,9 @@ struct TaskListPane: HomePaneContent {
         .sheet(isPresented: $isPresentingNewTask) {
             newTaskSheet
         }
+        .task {
+            try? TaskTagStore.ensureDefaults(in: modelContext)
+        }
     }
 
     private var newTaskSheet: some View {
@@ -105,6 +113,38 @@ struct TaskListPane: HomePaneContent {
                         selection: $newTaskDue,
                         displayedComponents: [.date, .hourAndMinute]
                     )
+                }
+
+                Text("Tags")
+                    .font(.headline)
+
+                if tags.isEmpty {
+                    Text("No tags yet. Add one below.")
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(tags, id: \.persistentModelID) { tag in
+                        Button {
+                            toggleSelection(for: tag)
+                        } label: {
+                            HStack {
+                                Text(tag.name)
+                                Spacer()
+                                if newTaskTagIDs.contains(tag.persistentModelID) {
+                                    Image(systemName: "checkmark")
+                                        .foregroundStyle(Color.accentColor)
+                                }
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                HStack {
+                    TextField("New Tag", text: $newTagName)
+                    Button("Add") {
+                        addTagForNewTask()
+                    }
+                    .disabled(newTagName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
             .formStyle(.grouped)
@@ -127,6 +167,8 @@ struct TaskListPane: HomePaneContent {
             title: newTaskTitle,
             deadline: hasDueDate ? newTaskDue : nil
         )
+        let selectedTags = tags.filter { newTaskTagIDs.contains($0.persistentModelID) }
+        task.tags = selectedTags
 
         modelContext.insert(task)
 
@@ -134,8 +176,30 @@ struct TaskListPane: HomePaneContent {
         newTaskTitle = ""
         hasDueDate = false
         newTaskDue = Date()
+        newTaskTagIDs = []
+        newTagName = ""
 
         isPresentingNewTask = false
+    }
+
+    private func toggleSelection(for tag: TaskTag) {
+        let id = tag.persistentModelID
+        if newTaskTagIDs.contains(id) {
+            newTaskTagIDs.remove(id)
+        } else {
+            newTaskTagIDs.insert(id)
+        }
+    }
+
+    private func addTagForNewTask() {
+        do {
+            if let tag = try TaskTagStore.createCustomTagIfNeeded(name: newTagName, in: modelContext) {
+                newTaskTagIDs.insert(tag.persistentModelID)
+                newTagName = ""
+            }
+        } catch {
+            // Keep UI responsive even if persistence fails.
+        }
     }
 
     private func deleteCompletedTasks() {
@@ -173,16 +237,19 @@ struct TaskListPane: HomePaneContent {
 
 private struct TaskRowView: View {
     @Bindable var task: TaskItem
+    let allTags: [TaskTag]
 
     let showDueDate: Bool
     let showDueTime: Bool
 
     init(
         task: TaskItem,
+        allTags: [TaskTag],
         showDueDate: Bool = false,
         showDueTime: Bool = false
     ) {
         self.task = task
+        self.allTags = allTags
         self.showDueDate = showDueDate
         self.showDueTime = showDueTime
     }
@@ -202,6 +269,13 @@ private struct TaskRowView: View {
                 Text(task.createdAt.formatted(date: .abbreviated, time: .shortened))
                     .font(.caption)
                     .foregroundStyle(.tertiary)
+
+                if !task.tags.isEmpty {
+                    Text(task.tags.map(\.name).sorted().joined(separator: " • "))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
             }
 
             Spacer(minLength: 0)
@@ -238,19 +312,28 @@ private struct TaskRowView: View {
                     Label("Move Deadline", systemImage: "calendar")
                 }
 
-            //                if task.label != nil {
-            //                    Button(role: .destructive) {
-            //                        task.label = nil
-            //                    } label: {
-            //                        Label("Remove Label", systemImage: "tag.slash")
-            //                    }
-            //                } else {
-            //                    Button {
-            //                        // Present your label picker here
-            //                    } label: {
-            //                        Label("Add Label", systemImage: "tag")
-            //                    }
-            //                }
+                Menu("Tags", systemImage: "tag") {
+                    if allTags.isEmpty {
+                        Text("No tags available")
+                    } else {
+                        ForEach(allTags) { tag in
+                            Button {
+                                toggle(tag)
+                            } label: {
+                                Label(tag.name, systemImage: has(tag) ? "checkmark" : "circle")
+                            }
+                        }
+                    }
+
+                    if !task.tags.isEmpty {
+                        Divider()
+                        Button(role: .destructive) {
+                            task.tags.removeAll()
+                        } label: {
+                            Label("Remove All Tags", systemImage: "tag.slash")
+                        }
+                    }
+                }
             } label: {
                 Image(systemName: "ellipsis") // TODO: make this vertical
                     .font(.caption)
@@ -265,6 +348,18 @@ private struct TaskRowView: View {
         .padding(.vertical, 2)
         .accessibilityElement(children: .combine)
     }
+
+    private func has(_ tag: TaskTag) -> Bool {
+        task.tags.contains { $0.persistentModelID == tag.persistentModelID }
+    }
+
+    private func toggle(_ tag: TaskTag) {
+        if let index = task.tags.firstIndex(where: { $0.persistentModelID == tag.persistentModelID }) {
+            task.tags.remove(at: index)
+        } else {
+            task.tags.append(tag)
+        }
+    }
 }
 
 // MARK: - Preview
@@ -273,5 +368,5 @@ private struct TaskRowView: View {
         TaskListPane()
             .navigationTitle("Home")
     }
-    .modelContainer(for: TaskItem.self, inMemory: true)
+    .modelContainer(for: [TaskItem.self, TaskTag.self], inMemory: true)
 }

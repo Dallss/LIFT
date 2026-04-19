@@ -14,7 +14,7 @@ struct Task_ManagerApp: App {
     @State private var settings = Settings()
     
     var sharedModelContainer: ModelContainer = {
-        let schema = Schema([TaskItem.self])
+        let schema = Schema([TaskItem.self, TaskTag.self])
         let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
         do {
             return try ModelContainer(for: schema, configurations: [configuration])
