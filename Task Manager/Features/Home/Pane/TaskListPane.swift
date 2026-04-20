@@ -238,6 +238,9 @@ struct TaskListPane: HomePaneContent {
 private struct TaskRowView: View {
     @Bindable var task: TaskItem
     let allTags: [TaskTag]
+    @Environment(\.modelContext) private var modelContext
+    @State private var isPresentingNewTagSheet = false
+    @State private var newTagName = ""
 
     let showDueDate: Bool
     let showDueTime: Bool
@@ -325,6 +328,13 @@ private struct TaskRowView: View {
                         }
                     }
 
+                    Divider()
+                    Button {
+                        isPresentingNewTagSheet = true
+                    } label: {
+                        Label("Add New Tag", systemImage: "plus")
+                    }
+
                     if !task.tags.isEmpty {
                         Divider()
                         Button(role: .destructive) {
@@ -347,6 +357,9 @@ private struct TaskRowView: View {
         }
         .padding(.vertical, 2)
         .accessibilityElement(children: .combine)
+        .sheet(isPresented: $isPresentingNewTagSheet) {
+            newTagSheet
+        }
     }
 
     private func has(_ tag: TaskTag) -> Bool {
@@ -359,6 +372,46 @@ private struct TaskRowView: View {
         } else {
             task.tags.append(tag)
         }
+    }
+
+    private var newTagSheet: some View {
+        NavigationStack {
+            Form {
+                TextField("Tag Name", text: $newTagName)
+            }
+            .formStyle(.grouped)
+            .navigationTitle("New Tag")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        newTagName = ""
+                        isPresentingNewTagSheet = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Add") {
+                        addTagFromMenu()
+                    }
+                    .disabled(newTagName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+        }
+        .frame(minWidth: 320, minHeight: 180)
+    }
+
+    private func addTagFromMenu() {
+        do {
+            if let tag = try TaskTagStore.createCustomTagIfNeeded(name: newTagName, in: modelContext) {
+                if !has(tag) {
+                    task.tags.append(tag)
+                }
+            }
+        } catch {
+            // Keep the menu flow functional if persistence fails.
+        }
+
+        newTagName = ""
+        isPresentingNewTagSheet = false
     }
 }
 
