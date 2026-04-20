@@ -26,7 +26,7 @@ struct TaskListPane: HomePaneContent {
         VStack(spacing: 0) {
             // Header
             HStack {
-                Text("Tasks")
+                Text("Today")
                     .font(.title2)
                     .fontWeight(.semibold)
                 Spacer()

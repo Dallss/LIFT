@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 /// Calendar column: owns selected-date state and embeds the grid UI.
 struct CalendarPane: HomePaneContent {
@@ -20,6 +21,7 @@ private struct CalendarGridView: View {
     @Environment(\.focusPane) var focus
     
     @Binding var selectedDate: Date?
+    @Query(sort: \TaskItem.deadline) private var tasks: [TaskItem]
     @State private var displayedMonth: Date = Calendar.current.startOfMonth(for: Date())
 
     private let calendar = Calendar.current
@@ -111,9 +113,11 @@ private struct CalendarGridView: View {
                         DayCell(
                             cell: cell,
                             isSelected: isSelected(cell.date),
-                            isToday: calendar.isDateInToday(cell.date)
+                            isToday: calendar.isDateInToday(cell.date),
+                            importantTaskCount: importantTaskCount(on: cell.date)
                         )
                         .frame(height: cellHeight)
+                        .contentShape(Rectangle())
                         .onTapGesture { toggleSelection(for: cell.date) }
                     }
                 }
@@ -167,6 +171,24 @@ private struct CalendarGridView: View {
             selectedDate = date
         }
     }
+
+    private func importantTaskCount(on date: Date) -> Int {
+        countTasks(on: date) { task in
+            task.tags.contains { $0.name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == "important" }
+        }
+    }
+
+    private func countTasks(on date: Date, matching predicate: (TaskItem) -> Bool) -> Int {
+        let startOfDay = calendar.startOfDay(for: date)
+        guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else {
+            return 0
+        }
+
+        return tasks.reduce(into: 0) { result, task in
+            guard let due = task.deadline, due >= startOfDay, due < endOfDay, predicate(task) else { return }
+            result += 1
+        }
+    }
 }
 
 // MARK: - Supporting types
@@ -181,24 +203,38 @@ private struct DayCell: View {
     let cell: CalendarCell
     let isSelected: Bool
     let isToday: Bool
+    let importantTaskCount: Int
 
     private let calendar = Calendar.current
 
     var body: some View {
-        ZStack {
-            if isSelected {
-                Circle()
-                    .fill(Color.primary)
-                    .frame(width: 30, height: 30)
-            } else if isToday {
-                Circle()
-                    .fill(Color.accentColor)
-                    .frame(width: 30, height: 30)
+        VStack(spacing: 2) {
+            ZStack {
+                if isSelected {
+                    Circle()
+                        .fill(Color.primary.opacity(0.4))
+                        .padding(6)
+
+                } else if isToday {
+                    Circle()
+                        .fill(Color.accentColor.opacity(0.8))
+                        .padding(6)
+                }
+
+                Text("\(calendar.component(.day, from: cell.date))")
+                    .font(.system(size: 13))
+                    .foregroundStyle(labelColor)
+                
+                if importantTaskCount > 0 {
+                    Text("\(importantTaskCount)")
+                        .font(.system(size: 10, weight: .semibold))
+                        .foregroundStyle(Color.red.opacity(0.6))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        .padding(2)
+                }
             }
 
-            Text("\(calendar.component(.day, from: cell.date))")
-                .font(.system(size: 13))
-                .foregroundStyle(labelColor)
+            
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

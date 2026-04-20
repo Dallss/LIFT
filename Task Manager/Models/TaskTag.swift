@@ -22,7 +22,7 @@ final class TaskTag {
 }
 
 enum TaskTagDefaults {
-    static let names = ["Work", "Personal", "Urgent", "Study", "Health", "Errands"]
+    static let names = ["Work", "Personal", "Urgent", "Important", "Study", "Health", "Errands"]
 }
 
 enum TaskTagStore {
