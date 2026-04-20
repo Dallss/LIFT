@@ -6,6 +6,7 @@ struct HomeView: View {
     // MARK: - STATE
 
     @State private var focusedPane: HomePane = .taskList
+    @State private var calendarSelection: Date?
 
     var body: some View {
         NavigationStack {
@@ -30,6 +31,7 @@ struct HomeView: View {
             .padding(10)
             .navigationTitle("Home")
             .environment(\.focusPane, focus)
+            .environment(\.selectedCalendarDate, $calendarSelection)
 
             .toolbar {
                 ToolbarItemGroup(placement: .primaryAction) {
@@ -66,5 +68,16 @@ extension EnvironmentValues {
     var focusPane: (HomePane) -> Void {
         get { self[FocusPaneKey.self] }
         set { self[FocusPaneKey.self] = newValue }
+    }
+}
+
+private struct SelectedCalendarDateKey: EnvironmentKey {
+    static let defaultValue: Binding<Date?> = .constant(nil)
+}
+
+extension EnvironmentValues {
+    var selectedCalendarDate: Binding<Date?> {
+        get { self[SelectedCalendarDateKey.self] }
+        set { self[SelectedCalendarDateKey.self] = newValue }
     }
 }

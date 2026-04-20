@@ -235,7 +235,7 @@ struct TaskListPane: HomePaneContent {
 
 // MARK: - Row
 
-private struct TaskRowView: View {
+struct TaskRowView: View {
     @Bindable var task: TaskItem
     let allTags: [TaskTag]
     @Environment(\.modelContext) private var modelContext

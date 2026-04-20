@@ -7,21 +7,41 @@ struct AllTasksPane: HomePaneContent {
     static let paneSystemImage = "list.bullet"
 
     @Environment(\.focusPane) var focus
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.selectedCalendarDate) private var selectedCalendarDateBinding
 
     @Query(sort: \TaskItem.deadline) private var tasks: [TaskItem]
-
-    @State private var collapsedDates: Set<DateComponents> = []
+    @Query(sort: \TaskTag.name) private var tags: [TaskTag]
     @State private var showUnfinishedOnly = true
 
     private var visibleTasks: [TaskItem] {
-        showUnfinishedOnly ? tasks.filter { !$0.isCompleted } : tasks
+        let filteredByStatus = showUnfinishedOnly ? tasks.filter { !$0.isCompleted } : tasks
+
+        guard let selectedDate = selectedCalendarDate else {
+            return filteredByStatus.sorted(by: compareDueDate)
+        }
+
+        let calendar = Calendar.current
+        let startOfDay = calendar.startOfDay(for: selectedDate)
+        guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else {
+            return []
+        }
+
+        return filteredByStatus
+            .filter { task in
+                guard let due = task.deadline else { return false }
+                return due >= startOfDay && due < endOfDay
+            }
+            .sorted(by: compareDueDate)
+    }
+
+    private var selectedCalendarDate: Date? {
+        selectedCalendarDateBinding.wrappedValue
     }
 
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("All Tasks")
+                Text(titleText)
                     .font(.title2)
                     .fontWeight(.semibold)
                 Spacer()
@@ -36,23 +56,22 @@ struct AllTasksPane: HomePaneContent {
             Divider()
 
             if visibleTasks.isEmpty {
-                ContentUnavailableView(
-                    showUnfinishedOnly ? "All caught up!" : "No tasks yet",
-                    systemImage: showUnfinishedOnly ? "checkmark.circle" : "list.bullet",
-                    description: Text(showUnfinishedOnly ? "No unfinished tasks remaining." : "Tasks you add will appear here.")
-                )
+                VStack(alignment: .center, spacing: 0) {
+                    ContentUnavailableView(
+                        emptyTitle,
+                        systemImage: emptySystemImage,
+                        description: Text(emptyDescription)
+                    )
+                    .frame(maxWidth: .infinity, alignment: .top)
+                    .padding(.top, 12)
+
+                    Spacer(minLength: 0)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             } else {
                 List {
-                    ForEach(groupedKeys, id: \.self) { key in
-                        Section {
-                            if !collapsedDates.contains(key) {
-                                ForEach(groupedTasks[key] ?? []) { task in
-                                    row(for: task)
-                                }
-                            }
-                        } header: {
-                            dateHeader(for: key)
-                        }
+                    ForEach(visibleTasks) { task in
+                        TaskRowView(task: task, allTags: tags, showDueDate: true, showDueTime: true)
                     }
                 }
                 .listStyle(.inset(alternatesRowBackgrounds: true))
@@ -60,116 +79,35 @@ struct AllTasksPane: HomePaneContent {
         }
     }
 
-    // MARK: - Row
-
-    private func row(for task: TaskItem) -> some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Toggle("Completed", isOn: Bindable(task).isCompleted)
-                .toggleStyle(.checkbox)
-                .labelsHidden()
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(task.title)
-                    .strikethrough(task.isCompleted, color: .secondary)
-                    .foregroundStyle(task.isCompleted ? .secondary : .primary)
-
-                Text(task.createdAt.formatted(date: .abbreviated, time: .shortened))
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
-            }
-
-            Spacer(minLength: 0)
-
-            if let due = task.deadline {
-                Text(due.formatted(date: .omitted, time: .shortened))
-                    .font(.caption)
-                    .foregroundStyle(!task.isCompleted && due < .now ? .red : .secondary)
-            }
-        }
-        .padding(.vertical, 2)
+    private var titleText: String {
+        guard let selectedDate = selectedCalendarDate else { return "All Tasks" }
+        return selectedDate.formatted(date: .abbreviated, time: .omitted)
     }
 
-    // MARK: - Date Header
-
-    private func dateHeader(for key: DateComponents) -> some View {
-        let collapsed = collapsedDates.contains(key)
-        let date = Calendar.current.date(from: key) ?? .now
-        let count = groupedTasks[key]?.count ?? 0
-
-        return Button {
-            if collapsed { collapsedDates.remove(key) }
-            else         { collapsedDates.insert(key) }
-        } label: {
-            HStack(spacing: 6) {
-                VStack(alignment: .leading, spacing: 1) {
-                    if Calendar.current.isDateInToday(date) {
-                        Text("Today")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.primary)
-                        Text(date.formatted(date: .complete, time: .omitted))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    } else if Calendar.current.isDateInYesterday(date) {
-                        Text("Yesterday")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.primary)
-                        Text(date.formatted(date: .complete, time: .omitted))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    } else if Calendar.current.isDateInTomorrow(date) {
-                        Text("Tomorrow")
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.primary)
-                        Text(date.formatted(date: .complete, time: .omitted))
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    } else {
-                        Text(date.formatted(date: .complete, time: .omitted))
-                            .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.primary)
-                    }
-                }
-
-                Spacer()
-
-                Text("\(count)")
-                    .font(.caption.monospacedDigit())
-                    .foregroundStyle(.secondary)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(.quaternary, in: Capsule())
-
-                Image(systemName: "chevron.right")
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(.tertiary)
-                    .rotationEffect(.degrees(collapsed ? 0 : 90))
-                    .animation(.spring(duration: 0.25), value: collapsed)
-            }
-            .contentShape(Rectangle())
+    private var emptyTitle: String {
+        if selectedCalendarDate != nil {
+            return "No tasks for this day"
         }
-        .buttonStyle(.plain)
+        return showUnfinishedOnly ? "All caught up!" : "No tasks yet"
     }
 
-    // MARK: - Grouping
-
-    private var groupedTasks: [DateComponents: [TaskItem]] {
-        var dict = Dictionary(grouping: visibleTasks.filter { $0.deadline != nil }) {
-            Calendar.current.dateComponents([.year, .month, .day], from: $0.deadline!)
-        }
-        let noDeadline = visibleTasks.filter { $0.deadline == nil }
-        if !noDeadline.isEmpty {
-            dict[DateComponents()] = noDeadline
-        }
-        return dict
+    private var emptySystemImage: String {
+        selectedCalendarDate != nil ? "calendar.badge.exclamationmark" : (showUnfinishedOnly ? "checkmark.circle" : "list.bullet")
     }
 
-    private var groupedKeys: [DateComponents] {
-        groupedTasks.keys.sorted {
-            guard $0 != DateComponents() else { return false }
-            guard $1 != DateComponents() else { return true }
-            let d0 = Calendar.current.date(from: $0) ?? .distantPast
-            let d1 = Calendar.current.date(from: $1) ?? .distantPast
-            return d0 < d1
+    private var emptyDescription: String {
+        if selectedCalendarDate != nil {
+            return "Select another date or clear the date selection in Calendar."
         }
+        return showUnfinishedOnly ? "No unfinished tasks remaining." : "Tasks you add will appear here."
+    }
+
+    private func compareDueDate(lhs: TaskItem, rhs: TaskItem) -> Bool {
+        let lhsDate = lhs.deadline ?? .distantFuture
+        let rhsDate = rhs.deadline ?? .distantFuture
+        if lhsDate == rhsDate {
+            return lhs.createdAt > rhs.createdAt
+        }
+        return lhsDate < rhsDate
     }
 }

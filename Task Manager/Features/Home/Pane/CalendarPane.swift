@@ -7,10 +7,10 @@ struct CalendarPane: HomePaneContent {
     static let paneTitle = "Calendar"
     static let paneSystemImage = "calendar"
 
-    @State private var selectedDate = Date.now
+    @Environment(\.selectedCalendarDate) private var selectedDate
 
     var body: some View {
-        CalendarGridView(selectedDate: $selectedDate)
+        CalendarGridView(selectedDate: selectedDate)
     }
 }
 
@@ -19,7 +19,7 @@ struct CalendarPane: HomePaneContent {
 private struct CalendarGridView: View {
     @Environment(\.focusPane) var focus
     
-    @Binding var selectedDate: Date
+    @Binding var selectedDate: Date?
     @State private var displayedMonth: Date = Calendar.current.startOfMonth(for: Date())
 
     private let calendar = Calendar.current
@@ -61,11 +61,25 @@ private struct CalendarGridView: View {
 
             Spacer()
 
-            Button { shiftMonth(by: 1) } label: {
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 15, weight: .medium))
+            HStack(spacing: 8) {
+                if selectedDate != nil {
+                    Button {
+                        selectedDate = nil
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
+                    .help("Clear selected date")
+                }
+
+                Button { shiftMonth(by: 1) } label: {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 15, weight: .medium))
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
             .padding(.horizontal, 8)
         }
         .padding(.horizontal, 4)
@@ -96,11 +110,11 @@ private struct CalendarGridView: View {
                     ForEach(cells) { cell in
                         DayCell(
                             cell: cell,
-                            isSelected: calendar.isDate(cell.date, inSameDayAs: selectedDate),
+                            isSelected: isSelected(cell.date),
                             isToday: calendar.isDateInToday(cell.date)
                         )
                         .frame(height: cellHeight)
-                        .onTapGesture { selectedDate = cell.date }
+                        .onTapGesture { toggleSelection(for: cell.date) }
                     }
                 }
 
@@ -138,6 +152,19 @@ private struct CalendarGridView: View {
     private func shiftMonth(by value: Int) {
         if let newMonth = calendar.date(byAdding: .month, value: value, to: displayedMonth) {
             displayedMonth = newMonth
+        }
+    }
+
+    private func isSelected(_ date: Date) -> Bool {
+        guard let selectedDate else { return false }
+        return calendar.isDate(date, inSameDayAs: selectedDate)
+    }
+
+    private func toggleSelection(for date: Date) {
+        if isSelected(date) {
+            selectedDate = nil
+        } else {
+            selectedDate = date
         }
     }
 }
