@@ -6,7 +6,7 @@
 //
 
 import Testing
-@testable import Task_Manager
+@testable import Lift
 
 struct Task_ManagerTests {
 

@@ -29,25 +29,25 @@
 
 /* Begin PBXFileReference section */
 		2175C9A02F91EDFA00266CAB /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		2199F97A2F8ADC730017FB4F /* Task Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Task Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2199F98B2F8ADC750017FB4F /* Task ManagerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Task ManagerTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2199F9952F8ADC750017FB4F /* Task ManagerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Task ManagerUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2199F97A2F8ADC730017FB4F /* Lift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2199F98B2F8ADC750017FB4F /* LiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2199F9952F8ADC750017FB4F /* LiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LiftUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		2199F97C2F8ADC730017FB4F /* Task Manager */ = {
+		2199F97C2F8ADC730017FB4F /* Lift */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Task Manager";
+			path = Lift;
 			sourceTree = "<group>";
 		};
-		2199F98E2F8ADC750017FB4F /* Task ManagerTests */ = {
+		2199F98E2F8ADC750017FB4F /* LiftTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Task ManagerTests";
+			path = LiftTests;
 			sourceTree = "<group>";
 		};
-		2199F9982F8ADC750017FB4F /* Task ManagerUITests */ = {
+		2199F9982F8ADC750017FB4F /* LiftUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "Task ManagerUITests";
+			path = LiftUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -81,9 +81,9 @@
 			isa = PBXGroup;
 			children = (
 				2175C9A02F91EDFA00266CAB /* README.md */,
-				2199F97C2F8ADC730017FB4F /* Task Manager */,
-				2199F98E2F8ADC750017FB4F /* Task ManagerTests */,
-				2199F9982F8ADC750017FB4F /* Task ManagerUITests */,
+				2199F97C2F8ADC730017FB4F /* Lift */,
+				2199F98E2F8ADC750017FB4F /* LiftTests */,
+				2199F9982F8ADC750017FB4F /* LiftUITests */,
 				2199FA132F8C148B0017FB4F /* Frameworks */,
 				2199F97B2F8ADC730017FB4F /* Products */,
 			);
@@ -92,9 +92,9 @@
 		2199F97B2F8ADC730017FB4F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				2199F97A2F8ADC730017FB4F /* Task Manager.app */,
-				2199F98B2F8ADC750017FB4F /* Task ManagerTests.xctest */,
-				2199F9952F8ADC750017FB4F /* Task ManagerUITests.xctest */,
+				2199F97A2F8ADC730017FB4F /* Lift.app */,
+				2199F98B2F8ADC750017FB4F /* LiftTests.xctest */,
+				2199F9952F8ADC750017FB4F /* LiftUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -109,9 +109,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		2199F9792F8ADC730017FB4F /* Task Manager */ = {
+		2199F9792F8ADC730017FB4F /* Lift */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2199F99F2F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "Task Manager" */;
+			buildConfigurationList = 2199F99F2F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "Lift" */;
 			buildPhases = (
 				2199F9762F8ADC730017FB4F /* Sources */,
 				2199F9772F8ADC730017FB4F /* Frameworks */,
@@ -122,18 +122,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				2199F97C2F8ADC730017FB4F /* Task Manager */,
+				2199F97C2F8ADC730017FB4F /* Lift */,
 			);
-			name = "Task Manager";
+			name = Lift;
 			packageProductDependencies = (
 			);
 			productName = "Task Manager";
-			productReference = 2199F97A2F8ADC730017FB4F /* Task Manager.app */;
+			productReference = 2199F97A2F8ADC730017FB4F /* Lift.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2199F98A2F8ADC750017FB4F /* Task ManagerTests */ = {
+		2199F98A2F8ADC750017FB4F /* LiftTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2199F9A22F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "Task ManagerTests" */;
+			buildConfigurationList = 2199F9A22F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "LiftTests" */;
 			buildPhases = (
 				2199F9872F8ADC750017FB4F /* Sources */,
 				2199F9882F8ADC750017FB4F /* Frameworks */,
@@ -145,18 +145,18 @@
 				2199F98D2F8ADC750017FB4F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				2199F98E2F8ADC750017FB4F /* Task ManagerTests */,
+				2199F98E2F8ADC750017FB4F /* LiftTests */,
 			);
-			name = "Task ManagerTests";
+			name = LiftTests;
 			packageProductDependencies = (
 			);
 			productName = "Task ManagerTests";
-			productReference = 2199F98B2F8ADC750017FB4F /* Task ManagerTests.xctest */;
+			productReference = 2199F98B2F8ADC750017FB4F /* LiftTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		2199F9942F8ADC750017FB4F /* Task ManagerUITests */ = {
+		2199F9942F8ADC750017FB4F /* LiftUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2199F9A52F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "Task ManagerUITests" */;
+			buildConfigurationList = 2199F9A52F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "LiftUITests" */;
 			buildPhases = (
 				2199F9912F8ADC750017FB4F /* Sources */,
 				2199F9922F8ADC750017FB4F /* Frameworks */,
@@ -168,13 +168,13 @@
 				2199F9972F8ADC750017FB4F /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				2199F9982F8ADC750017FB4F /* Task ManagerUITests */,
+				2199F9982F8ADC750017FB4F /* LiftUITests */,
 			);
-			name = "Task ManagerUITests";
+			name = LiftUITests;
 			packageProductDependencies = (
 			);
 			productName = "Task ManagerUITests";
-			productReference = 2199F9952F8ADC750017FB4F /* Task ManagerUITests.xctest */;
+			productReference = 2199F9952F8ADC750017FB4F /* LiftUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -216,9 +216,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				2199F9792F8ADC730017FB4F /* Task Manager */,
-				2199F98A2F8ADC750017FB4F /* Task ManagerTests */,
-				2199F9942F8ADC750017FB4F /* Task ManagerUITests */,
+				2199F9792F8ADC730017FB4F /* Lift */,
+				2199F98A2F8ADC750017FB4F /* LiftTests */,
+				2199F9942F8ADC750017FB4F /* LiftUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -275,12 +275,12 @@
 /* Begin PBXTargetDependency section */
 		2199F98D2F8ADC750017FB4F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2199F9792F8ADC730017FB4F /* Task Manager */;
+			target = 2199F9792F8ADC730017FB4F /* Lift */;
 			targetProxy = 2199F98C2F8ADC750017FB4F /* PBXContainerItemProxy */;
 		};
 		2199F9972F8ADC750017FB4F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2199F9792F8ADC730017FB4F /* Task Manager */;
+			target = 2199F9792F8ADC730017FB4F /* Lift */;
 			targetProxy = 2199F9962F8ADC750017FB4F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -409,16 +409,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Task Manager/Task_Manager.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Task Manager/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Lift/Preview Content\"";
 				DEVELOPMENT_TEAM = QAZRCFS2B2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Lift;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -437,16 +437,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Task Manager/Task_Manager.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Task Manager/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Lift/Preview Content\"";
 				DEVELOPMENT_TEAM = QAZRCFS2B2;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Lift;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -474,7 +474,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Task Manager.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Task Manager";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lift";
 			};
 			name = Debug;
 		};
@@ -492,7 +492,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Task Manager.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Task Manager";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Lift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Lift";
 			};
 			name = Release;
 		};
@@ -508,7 +508,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = "Task Manager";
+				TEST_TARGET_NAME = Lift;
 			};
 			name = Debug;
 		};
@@ -524,7 +524,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = "Task Manager";
+				TEST_TARGET_NAME = Lift;
 			};
 			name = Release;
 		};
@@ -540,7 +540,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2199F99F2F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "Task Manager" */ = {
+		2199F99F2F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "Lift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2199F9A02F8ADC750017FB4F /* Debug */,
@@ -549,7 +549,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2199F9A22F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "Task ManagerTests" */ = {
+		2199F9A22F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "LiftTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2199F9A32F8ADC750017FB4F /* Debug */,
@@ -558,7 +558,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2199F9A52F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "Task ManagerUITests" */ = {
+		2199F9A52F8ADC750017FB4F /* Build configuration list for PBXNativeTarget "LiftUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2199F9A62F8ADC750017FB4F /* Debug */,
