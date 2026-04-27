@@ -80,9 +80,9 @@ struct Pane<Content: View>: View {
         .overlay {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .strokeBorder(
-                    isFocused
-                    ? Color.accentColor.opacity(0.45)
-                    : Color.secondary.opacity(0.25),
+//                    isFocused
+//                    ? Color.accentColor.opacity(0.45)
+                    Color.secondary.opacity(0.25),
                     lineWidth: isFocused ? 2 : 1
                 )
         }
