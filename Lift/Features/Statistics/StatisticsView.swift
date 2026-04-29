@@ -10,8 +10,3 @@ struct StatisticsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
-
-#Preview {
-    StatisticsView()
-        .frame(width: 400, height: 300)
-}

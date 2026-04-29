@@ -58,19 +58,6 @@ struct Pane<Content: View>: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            
-//            Group {
-//                if isFocused {
-//                    focusHeader
-//                }
-//                else{
-//                    if isHovering {
-//                        focusHeader
-//                            .transition(.move(edge: .top))
-//                    }
-//                }
-//            }
-            
             content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .layoutPriority(isFocused ? 1 : 0)
@@ -80,9 +67,7 @@ struct Pane<Content: View>: View {
         .overlay {
             RoundedRectangle(cornerRadius: 12, style: .continuous)
                 .strokeBorder(
-//                    isFocused
-//                    ? Color.accentColor.opacity(0.45)
-                    Color.secondary.opacity(0.25),
+                    Color.secondary.opacity(0.25), // TODO: standardize
                     lineWidth: isFocused ? 2 : 1
                 )
         }
@@ -95,34 +80,6 @@ struct Pane<Content: View>: View {
         .id(id)
         .onHover { hovering in
             isHovering = hovering
-        }
-    }
-
-    private var focusHeader: some View {
-        HStack(spacing: 8) {
-
-            Image(systemName: systemImage)
-                .foregroundStyle(isFocused ? Color.accentColor : .secondary)
-
-            Text(title)
-                .font(.headline)
-                .foregroundStyle(isFocused ? Color.primary : .secondary)
-
-            Spacer(minLength: 0)
-
-            if !isFocused {
-                Text("Tap to expand")
-                    .font(.caption)
-                    .foregroundStyle(.tertiary)
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .contentShape(Rectangle())
-        .background(.quaternary.opacity(0.2))
-        .onTapGesture {
-            onFocus()
         }
     }
 }

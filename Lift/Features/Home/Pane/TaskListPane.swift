@@ -25,22 +25,27 @@ struct TaskListPane: HomePaneContent {
     var body: some View {
         VStack(spacing: 0) {
             // Header
-            HStack {
-                Text("Today")
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                Spacer()
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity)
-            .frame(height: 44)
-            .contentShape(Rectangle())
+            Header(
+                "Today",
+                showsMenu: true,
+                items: [
+                    HeaderMenuItem(
+                        title: "New Task",
+                        action: {
+                            isPresentingNewTask = true
+                        }
+                    ),
+                    HeaderMenuItem(
+                        title: "Clear Completed",
+                        action: {
+                            deleteCompletedTasks()
+                        }
+                    )
+                ]
+            )
             .onTapGesture {
                 focus(.taskList)
             }
-            
-            Divider()
 
             Group {
                 if tasks.isEmpty {
@@ -56,40 +61,9 @@ struct TaskListPane: HomePaneContent {
                         }
                         .onDelete(perform: deleteTasks)
                     }
-                    .listStyle(.inset(alternatesRowBackgrounds: true))
                 }
             }
-
-            HStack(spacing: 12) {
-
-                // Add Task (forced 44)
-                Button {
-                    newTaskTitle = ""
-                    newTaskTagIDs = []
-                    newTagName = ""
-                    isPresentingNewTask = true
-                } label: {
-                    HStack {
-                        Image(systemName: "plus")
-                        Text("Add Task")
-                    }
-                    .frame(height: 44)
-                    .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
-                .controlSize(.regular)
-
-                // Trash (forced 44 square)
-                Button {
-                    deleteCompletedTasks()
-                } label: {
-                    Image(systemName: "trash")
-                        .frame(width: 44, height: 44)
-                }
-                .buttonStyle(.bordered)
-                .controlSize(.regular)
-            }
-            .padding()
+            .frame(maxHeight: .infinity)
         }
         .sheet(isPresented: $isPresentingNewTask) {
             newTaskSheet

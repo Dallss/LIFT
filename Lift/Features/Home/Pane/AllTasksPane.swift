@@ -40,20 +40,13 @@ struct AllTasksPane: HomePaneContent {
 
     var body: some View {
         VStack(spacing: 0) {
-            HStack {
-                Text(titleText)
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                Spacer()
+            Header(
+                titleText,
+                showsMenu: false
+            )
+            .onTapGesture {
+                focus(.allTasks)
             }
-            .padding(.horizontal)
-            .padding(.vertical, 12)
-            .frame(maxWidth: .infinity)
-            .frame(height: 44)
-            .contentShape(Rectangle())
-            .onTapGesture { focus(.allTasks) }
-
-            Divider()
 
             if visibleTasks.isEmpty {
                 VStack(alignment: .center, spacing: 0) {

@@ -253,7 +253,3 @@ extension Calendar {
     }
 }
 
-#Preview("Calendar grid") {
-    CalendarPane()
-        .frame(width: 640, height: 480)
-}
