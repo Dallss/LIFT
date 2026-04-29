@@ -47,23 +47,22 @@ struct TaskListPane: HomePaneContent {
                 focus(.taskList)
             }
 
-            Group {
-                if tasks.isEmpty {
-                    ContentUnavailableView(
-                        "No tasks yet",
-                        systemImage: "checklist",
-                        description: Text("Add a task using the button below.")
-                    )
-                } else {
-                    List {
-                        ForEach(tasksByDueDate(selectedDate)) { task in
-                            TaskRowView(task: task, allTags: tags, showDueTime: true)
-                        }
-                        .onDelete(perform: deleteTasks)
+            if tasks.isEmpty {
+                ContentUnavailableView(
+                    "No tasks yet",
+                    systemImage: "checklist",
+                    description: Text(" ")
+                )
+                .font(.footnote)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                List {
+                    ForEach(tasksByDueDate(selectedDate)) { task in
+                        TaskRowView(task: task, allTags: tags, showDueTime: true)
                     }
+                    .onDelete(perform: deleteTasks)
                 }
             }
-            .frame(maxHeight: .infinity)
         }
         .sheet(isPresented: $isPresentingNewTask) {
             newTaskSheet
