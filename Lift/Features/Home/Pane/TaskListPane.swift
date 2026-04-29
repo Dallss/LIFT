@@ -65,7 +65,16 @@ struct TaskListPane: HomePaneContent {
             }
         }
         .sheet(isPresented: $isPresentingNewTask) {
-            newTaskSheet
+            NewTaskView(
+                title: $newTaskTitle,
+                hasDueDate: $hasDueDate,
+                dueDate: $newTaskDue,
+                selectedTagIDs: $newTaskTagIDs,
+                tags: tags,
+                onAddTask: addTask,
+                onCancel: { isPresentingNewTask = false },
+                onToggleTag: toggleSelection
+            )
         }
         .task {
             try? TaskTagStore.ensureDefaults(in: modelContext)
