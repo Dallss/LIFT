@@ -5,7 +5,7 @@ struct HomeView: View {
 
     // MARK: - STATE
 
-    @State private var focusedPane: HomePane = .taskList
+    @State private var focusedPane: HomePane = .calendar
     @State private var calendarSelection: Date?
 
     var body: some View {

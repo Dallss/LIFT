@@ -46,15 +46,15 @@ struct HomeTriPaneLayout: Layout {
         ],
         // Calendar focused
         [
-            CGRect(x: 0.0, y: 0.52, width: 0.34, height: 0.48),
-            CGRect(x: 0.34, y: 0.0, width: 0.66, height: 1.0),
             CGRect(x: 0.0, y: 0.0, width: 0.34, height: 0.48),
+            CGRect(x: 0.34, y: 0.0, width: 0.66, height: 1.0),
+            CGRect(x: 0.0, y: 0.52, width: 0.34, height: 0.48),
         ],
         // Mini stacks focused
         [
-            CGRect(x: 0.0, y: 0.0, width: 0.36, height: 0.42),
-            CGRect(x: 0.0, y: 0.44, width: 0.36, height: 0.56),
-            CGRect(x: 0.38, y: 0.0, width: 0.62, height: 1.0),
+            CGRect(x: 0.62, y: 0.52, width: 0.38, height: 0.48),
+            CGRect(x: 0.62, y: 0.0, width: 0.38, height: 0.48),
+            CGRect(x: 0.0, y: 0.0, width: 0.62, height: 1.0),
         ],
     ]
 
