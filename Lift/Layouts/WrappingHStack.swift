@@ -15,16 +15,20 @@ struct WrappingHStack: Layout {
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let maxWidth = proposal.width ?? .infinity
+        let proposedWidth = proposal.width
+        let hasFiniteWidth = proposedWidth.map(\.isFinite) ?? false
+        let maxWidth = hasFiniteWidth ? (proposedWidth ?? 0) : .greatestFiniteMagnitude
 
         var x: CGFloat = 0
         var y: CGFloat = 0
         var rowHeight: CGFloat = 0
+        var widestRow: CGFloat = 0
 
         for view in subviews {
             let size = view.sizeThatFits(.unspecified)
 
             if x + size.width > maxWidth {
+                widestRow = max(widestRow, x > 0 ? x - spacing : x)
                 x = 0
                 y += rowHeight + spacing
                 rowHeight = 0
@@ -34,7 +38,9 @@ struct WrappingHStack: Layout {
             x += size.width + spacing
         }
 
-        return CGSize(width: maxWidth, height: y + rowHeight)
+        widestRow = max(widestRow, x > 0 ? x - spacing : x)
+        let finalWidth = hasFiniteWidth ? min(widestRow, proposedWidth ?? widestRow) : widestRow
+        return CGSize(width: finalWidth, height: y + rowHeight)
     }
 
     func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {

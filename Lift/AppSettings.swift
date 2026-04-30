@@ -9,6 +9,6 @@ import SwiftUI
 import Observation
 
 @Observable
-class Settings {
+class AppSettings {
 
 }

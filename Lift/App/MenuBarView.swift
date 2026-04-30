@@ -6,19 +6,17 @@
 //
 
 import SwiftUI
-import SwiftData
 import AppKit
 
 struct MenuBarView: View {
 
     @EnvironmentObject var windowManager: WindowManager
-    let modelContainer: ModelContainer 
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
 
             Button("Open Tasks") {
-                windowManager.toggle(modelContainer: modelContainer)
+                windowManager.toggle()
             }
 
             Divider()

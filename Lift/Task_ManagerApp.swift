@@ -4,35 +4,39 @@
 //
 //  Created by Randall Alquicer on 4/12/26.
 //
-import SwiftData
 import SwiftUI
+import SwiftData
 import AppKit
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.setActivationPolicy(.accessory)
+    }
+}
 
 @main
 struct Task_ManagerApp: App {
 
-    @StateObject private var windowManager = WindowManager()
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    private let modelContainer: ModelContainer
+    private let windowManager: WindowManager
+    private let statusBar: StatusBarController
 
-    private let sharedModelContainer: ModelContainer = {
+    init() {
+
         let schema = Schema([TaskItem.self, TaskTag.self])
-        let configuration = ModelConfiguration(
-            schema: schema,
-            isStoredInMemoryOnly: false
-        )
+        let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
-        do {
-            return try ModelContainer(for: schema, configurations: [configuration])
-        } catch {
-            fatalError("Could not create ModelContainer: \(error)")
-        }
-    }()
+        let container = try! ModelContainer(for: schema, configurations: [config])
+
+        self.modelContainer = container
+        self.windowManager = WindowManager(container: container)
+        self.statusBar = StatusBarController(windowManager: windowManager)
+    }
 
     var body: some Scene {
-
-        MenuBarExtra("Tasks", systemImage: "checklist") {
-            MenuBarView(modelContainer: sharedModelContainer)
-                .environmentObject(windowManager)
+        Settings {
+            EmptyView()
         }
-        .menuBarExtraStyle(.window)
     }
 }

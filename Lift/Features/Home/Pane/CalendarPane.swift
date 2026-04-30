@@ -100,12 +100,13 @@ private struct CalendarGridView: View {
 
     private func dayGrid(availableHeight: CGFloat) -> some View {
         let cells = makeCells()
-        let rowCount = CGFloat(cells.count / 7)
-        let cellHeight = availableHeight / rowCount
+        let rowCount = max(1, CGFloat(cells.count / 7))
+        let safeHeight = availableHeight.isFinite ? max(0, availableHeight) : 0
+        let cellHeight = safeHeight / rowCount
 
         return GeometryReader { geo in
-            let w = geo.size.width
-            let h = geo.size.height
+            let w = geo.size.width.isFinite ? max(0, geo.size.width) : 0
+            let h = geo.size.height.isFinite ? max(0, geo.size.height) : 0
 
             ZStack(alignment: .topLeading) {
                 LazyVGrid(columns: columns, spacing: 0) {
