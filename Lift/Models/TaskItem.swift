@@ -4,6 +4,7 @@ import SwiftData
 @Model
 final class TaskItem {
     var title: String
+    var details: String?
     var createdAt: Date
     var isCompleted: Bool
     var deadline: Date?
@@ -11,6 +12,7 @@ final class TaskItem {
 
     init(
         title: String,
+        details: String? = nil,
         createdAt: Date = .now,
         isCompleted: Bool = false,
         deadline: Date? = nil,
@@ -21,5 +23,6 @@ final class TaskItem {
         self.isCompleted = isCompleted
         self.deadline = deadline
         self.tags = tags
+        self.details = details
     }
 }
