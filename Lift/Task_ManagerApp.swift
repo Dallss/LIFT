@@ -4,18 +4,22 @@
 //
 //  Created by Randall Alquicer on 4/12/26.
 //
-
 import SwiftData
 import SwiftUI
+import AppKit
 
 @main
 struct Task_ManagerApp: App {
-    
-    @State private var settings = Settings()
-    
-    var sharedModelContainer: ModelContainer = {
+
+    @StateObject private var windowManager = WindowManager()
+
+    private let sharedModelContainer: ModelContainer = {
         let schema = Schema([TaskItem.self, TaskTag.self])
-        let configuration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let configuration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false
+        )
+
         do {
             return try ModelContainer(for: schema, configurations: [configuration])
         } catch {
@@ -24,11 +28,11 @@ struct Task_ManagerApp: App {
     }()
 
     var body: some Scene {
-        WindowGroup {
-            ContentView()
+
+        MenuBarExtra("Tasks", systemImage: "checklist") {
+            MenuBarView(modelContainer: sharedModelContainer)
+                .environmentObject(windowManager)
         }
-        .modelContainer(sharedModelContainer)
-        .defaultSize(width: 1000, height: 700)
-        .defaultPosition(.center)
+        .menuBarExtraStyle(.window)
     }
 }
