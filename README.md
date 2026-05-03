@@ -13,3 +13,7 @@
 - Left-clicking the menu bar icon toggles a floating task panel.
 - Option-clicking or Control-clicking the menu bar icon opens a dropdown menu with `Quit`.
 - The floating panel uses a larger default size and enforces a minimum size for readability.
+
+### Logo - First Draft
+
+![App Screenshot](docs/images/Logo_v1.png)
