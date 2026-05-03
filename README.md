@@ -16,4 +16,4 @@
 
 ### Logo - First Draft
 
-![App Screenshot](docs/images/Logo_v1.png)
+![App Screenshot](Lift/Docs/Images/Logo_v1.png)
