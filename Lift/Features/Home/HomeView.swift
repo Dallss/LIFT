@@ -9,43 +9,63 @@ struct HomeView: View {
     @State private var calendarSelection: Date?
 
     var body: some View {
-        NavigationStack {
+        
+        HomeTriPaneLayout(focusFraction: CGFloat(focusedPane.rawValue)) {
 
-            HomeTriPaneLayout(focusFraction: CGFloat(focusedPane.rawValue)) {
-
-                Pane(isFocused: focusedPane == .taskList, onFocus: { focus(.taskList) }) {
-                    TaskListPane()
-                }
-                .padding(8)
-
-                Pane(isFocused: focusedPane == .calendar, onFocus: { focus(.calendar) }) {
-                    CalendarPane()
-                }
-                .padding(8)
-
-                Pane(isFocused: focusedPane == .allTasks, onFocus: { focus(.allTasks) }) {
-                    AllTasksPane()
-                }
-                .padding(8)
+            Pane(isFocused: focusedPane == .taskList, onFocus: { focus(.taskList) }) {
+                TaskListPane()
             }
-            .padding(10)
-            .navigationTitle("Home")
-            .environment(\.focusPane, focus)
-            .environment(\.selectedCalendarDate, $calendarSelection)
+            .padding(8)
 
-            .toolbar {
-                ToolbarItemGroup(placement: .primaryAction) {
-
-                    Picker("Focus", selection: $focusedPane) {
-                        Text("Tasks").tag(HomePane.taskList)
-                        Text("Calendar").tag(HomePane.calendar)
-                        Text("Lists").tag(HomePane.allTasks)
-                    }
-                    .pickerStyle(.segmented)
-                    .frame(minWidth: 280)
-                }
+            Pane(isFocused: focusedPane == .calendar, onFocus: { focus(.calendar) }) {
+                CalendarPane()
             }
-        }
+            .padding(8)
+
+            Pane(isFocused: focusedPane == .allTasks, onFocus: { focus(.allTasks) }) {
+                AllTasksPane()
+            }
+            .padding(8)
+        }.padding(10)
+        .environment(\.focusPane, focus)
+        .environment(\.selectedCalendarDate, $calendarSelection)
+//        NavigationStack {
+//
+//            HomeTriPaneLayout(focusFraction: CGFloat(focusedPane.rawValue)) {
+//
+//                Pane(isFocused: focusedPane == .taskList, onFocus: { focus(.taskList) }) {
+//                    TaskListPane()
+//                }
+//                .padding(8)
+//
+//                Pane(isFocused: focusedPane == .calendar, onFocus: { focus(.calendar) }) {
+//                    CalendarPane()
+//                }
+//                .padding(8)
+//
+//                Pane(isFocused: focusedPane == .allTasks, onFocus: { focus(.allTasks) }) {
+//                    AllTasksPane()
+//                }
+//                .padding(8)
+//            }
+//            .padding(10)
+//            .navigationTitle("Home")
+//            .environment(\.focusPane, focus)
+//            .environment(\.selectedCalendarDate, $calendarSelection)
+//
+//            .toolbar {
+//                ToolbarItemGroup(placement: .primaryAction) {
+//
+//                    Picker("Focus", selection: $focusedPane) {
+//                        Text("Tasks").tag(HomePane.taskList)
+//                        Text("Calendar").tag(HomePane.calendar)
+//                        Text("Lists").tag(HomePane.allTasks)
+//                    }
+//                    .pickerStyle(.segmented)
+//                    .frame(minWidth: 280)
+//                }
+//            }
+//        }
     }
 
     private func focus(_ pane: HomePane) {
