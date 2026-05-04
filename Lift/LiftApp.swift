@@ -1,9 +1,8 @@
 //
-//  Task_ManagerApp.swift
-//  Task Manager
+//  LiftApp.swift
+//  Lift
 //
-//  Created by Randall Alquicer on 4/12/26.
-//
+
 import SwiftUI
 import SwiftData
 import AppKit
@@ -15,22 +14,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 }
 
 @main
-struct Task_ManagerApp: App {
+struct LiftApp: App {
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    private let modelContainer: ModelContainer
     private let windowManager: WindowManager
     private let statusBar: StatusBarController
 
     init() {
-
         let schema = Schema([TaskItem.self, TaskTag.self])
         let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
         let container = try! ModelContainer(for: schema, configurations: [config])
-
-        self.modelContainer = container
-        self.windowManager = WindowManager(container: container)
+        let windowManager = WindowManager(container: container)
+        self.windowManager = windowManager
         self.statusBar = StatusBarController(windowManager: windowManager)
     }
 

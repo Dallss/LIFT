@@ -1,13 +1,11 @@
 //
-//  Task_ManagerUITestsLaunchTests.swift
-//  Task ManagerUITests
-//
-//  Created by Randall Alquicer on 4/12/26.
+//  LiftUITestsLaunchTests.swift
+//  LiftUITests
 //
 
 import XCTest
 
-final class Task_ManagerUITestsLaunchTests: XCTestCase {
+final class LiftUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true
@@ -21,9 +19,6 @@ final class Task_ManagerUITestsLaunchTests: XCTestCase {
     func testLaunch() throws {
         let app = XCUIApplication()
         app.launch()
-
-        // Insert steps here to perform after app launch but before taking a screenshot,
-        // such as logging into a test account or navigating somewhere in the app
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Launch Screen"

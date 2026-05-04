@@ -1,16 +1,13 @@
 //
 //  WindowManager.swift
-//  Task Manager
+//  Lift
 //
-//  Created by Randall Alquicer on 5/1/26.
-//
-
 
 import SwiftUI
 import AppKit
 import SwiftData
 
-final class WindowManager: ObservableObject {
+final class WindowManager: NSObject, ObservableObject, NSWindowDelegate {
 
     private let defaultSize = NSSize(width: 1100, height: 760)
     private let minimumSize = NSSize(width: 900, height: 620)
@@ -19,20 +16,21 @@ final class WindowManager: ObservableObject {
 
     init(container: ModelContainer) {
         self.container = container
+        super.init()
         createWindowIfNeeded()
     }
 
     private func createWindowIfNeeded() {
         guard panel == nil else { return }
 
-        let rootView = ContentView()
+        let rootView = MainTabView()
             .modelContainer(container)
 
         let hosting = NSHostingController(rootView: rootView)
 
         let panel = NSPanel(
             contentRect: NSRect(origin: .zero, size: defaultSize),
-            styleMask: [.titled, .closable, .resizable, .fullSizeContentView],
+            styleMask: [.titled, .closable, .resizable, .fullSizeContentView, .nonactivatingPanel],
             backing: .buffered,
             defer: false
         )
@@ -45,6 +43,9 @@ final class WindowManager: ObservableObject {
         panel.titleVisibility = .hidden
         panel.titlebarAppearsTransparent = true
         panel.isMovableByWindowBackground = true
+        panel.becomesKeyOnlyIfNeeded = false
+        panel.hidesOnDeactivate = false  // Prevent auto-hide fighting with our toggle
+        panel.delegate = self
 
         self.panel = panel
     }
@@ -59,10 +60,18 @@ final class WindowManager: ObservableObject {
             if panel.frame.width < minimumSize.width || panel.frame.height < minimumSize.height {
                 panel.setContentSize(defaultSize)
             }
-            NSApp.activate(ignoringOtherApps: true)
             panel.center()
-            panel.orderFrontRegardless()
-            panel.makeKey()
+            // Activate first, then show — order matters
+            NSApp.activate(ignoringOtherApps: true)
+            panel.makeKeyAndOrderFront(nil)
         }
+    }
+
+    // MARK: - NSWindowDelegate
+
+    // When user clicks outside or another app takes focus, deactivate cleanly
+    func windowDidResignKey(_ notification: Notification) {
+        panel?.orderOut(nil)
+        NSApp.setActivationPolicy(.accessory)
     }
 }

@@ -16,14 +16,14 @@
 			containerPortal = 2199F9722F8ADC720017FB4F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2199F9792F8ADC730017FB4F;
-			remoteInfo = "Task Manager";
+			remoteInfo = Lift;
 		};
 		2199F9962F8ADC750017FB4F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2199F9722F8ADC720017FB4F /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 2199F9792F8ADC730017FB4F;
-			remoteInfo = "Task Manager";
+			remoteInfo = Lift;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -127,7 +127,7 @@
 			name = Lift;
 			packageProductDependencies = (
 			);
-			productName = "Task Manager";
+			productName = Lift;
 			productReference = 2199F97A2F8ADC730017FB4F /* Lift.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -150,7 +150,7 @@
 			name = LiftTests;
 			packageProductDependencies = (
 			);
-			productName = "Task ManagerTests";
+			productName = LiftTests;
 			productReference = 2199F98B2F8ADC750017FB4F /* LiftTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
@@ -173,7 +173,7 @@
 			name = LiftUITests;
 			packageProductDependencies = (
 			);
-			productName = "Task ManagerUITests";
+			productName = LiftUITests;
 			productReference = 2199F9952F8ADC750017FB4F /* LiftUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
@@ -200,7 +200,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 2199F9752F8ADC720017FB4F /* Build configuration list for PBXProject "Task Manager" */;
+			buildConfigurationList = 2199F9752F8ADC720017FB4F /* Build configuration list for PBXProject "Lift" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -409,6 +409,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Lift/Lift.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -437,6 +438,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Lift/Lift.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -531,7 +533,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2199F9752F8ADC720017FB4F /* Build configuration list for PBXProject "Task Manager" */ = {
+		2199F9752F8ADC720017FB4F /* Build configuration list for PBXProject "Lift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2199F99D2F8ADC750017FB4F /* Debug */,
